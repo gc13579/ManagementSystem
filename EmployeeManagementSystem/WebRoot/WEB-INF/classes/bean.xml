@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE object [
+	<!ELEMENT object (trans,dao,service,proxy,action)>
+	<!ELEMENT trans (bean*)>
+	<!ELEMENT dao (bean*)>
+	<!ELEMENT service (bean*)>
+	<!ELEMENT proxy (bean*)>
+	<!ELEMENT action (bean*)>
+	<!ELEMENT bean (property*) >
+	<!ATTLIST bean id CDATA #REQUIRED>
+	<!ATTLIST bean class CDATA #REQUIRED>
+	<!ELEMENT property (#PCDATA)>
+	<!ATTLIST property id CDATA #REQUIRED>
+	<!ATTLIST property ref CDATA #REQUIRED>
+]>
+<object>
+	<trans>
+		<bean id="trans" class="com.web.trans.impl.TransactionImpl"></bean>
+	</trans>
+	<dao>
+		<bean id="userDao" class="com.web.dao.impl.UserDaoImpl"></bean>
+		<bean id="userVODao" class="com.web.dao.impl.UserVODaoImpl"></bean>
+		<bean id="menuDao" class="com.web.dao.impl.MenuDaoImpl"></bean>
+		<bean id="permissionsDao" class="com.web.dao.impl.PermissionsDaoImpl"></bean>
+		<bean id="permissionsVODao" class="com.web.dao.impl.PermissionsVODaoImpl"></bean>
+		<bean id="roleDao" class="com.web.dao.impl.RoleDaoImpl"></bean>
+		<bean id="employeeDao" class="com.web.dao.impl.EmployeeDaoImpl"></bean>
+		<bean id="deptDao" class="com.web.dao.impl.DeptDaoImpl"></bean>
+	    <bean id="holidayDao" class="com.web.dao.impl.HolidayDaoImpl"></bean>
+	    <bean id="reimbursementDao" class="com.web.dao.impl.ReimbursementDaoImpl"></bean>
+	</dao>
+	<service>
+		<bean id="userService" class="com.web.service.impl.UserServiceImpl">
+			<property id="userDao" ref="userDao"/>
+		</bean>
+		<bean id="userVOService" class="com.web.service.impl.UserVOServiceImpl">
+			<property id="userVODao" ref="userVODao"/>
+			<property id="employeeDao" ref="employeeDao"/>
+		</bean>
+		<bean id="menuService" class="com.web.service.impl.MenuServiceImpl">
+			<property id="menuDao" ref="menuDao"/>
+		</bean>
+		<bean id="permissionsService" class="com.web.service.impl.PermissionsServiceImpl">
+			<property id="permissionsDao" ref="permissionsDao"/>
+		</bean>
+		<bean id="permissionsVOService" class="com.web.service.impl.PermissionsVOServiceImpl">
+			<property id="permissionsVODao" ref="permissionsVODao"/>
+		</bean>
+		<bean id="roleService" class="com.web.service.impl.RoleServiceImpl">
+			<property id="roleDao" ref="roleDao"/>
+			<property id="userDao" ref="userDao"/>
+		</bean>
+		<bean id="employeeService" class="com.web.service.impl.EmployeeServiceImpl">
+			<property id="employeeDao" ref="employeeDao"/>
+		</bean>
+		<bean id="deptService" class="com.web.service.impl.DeptServiceImpl">
+			<property id="deptDao" ref="deptDao"/>
+			<property id="employeeDao" ref="employeeDao"/>
+		</bean>
+		<bean id="holidayService" class="com.web.service.impl.HolidayServiceImpl">
+			<property id="holidayDao" ref="holidayDao"/>
+		</bean>
+		<bean id="reimbursementService" class="com.web.service.impl.ReimbursementServiceImpl">
+			<property id="reimbursementDao" ref="reimbursementDao"/>
+		</bean>
+		<!-- 使用ref找到需要的dao对象，直接放入service中，实现自动注入 -->
+	</service>
+	<proxy>
+		<bean id="userServiceProxy" class="com.web.service.proxy.UserServiceProxy">
+			<property id="userService" ref="userService"/>
+			<!-- id指的是本类中对象的名字，ref指向目标bean -->
+			<property id="trans" ref="trans"/>
+		</bean>
+		<bean id="userVOServiceProxy" class="com.web.service.proxy.UserVOServiceProxy">
+			<property id="userVOService" ref="userVOService"/>
+			<property id="trans" ref="trans"/>
+		</bean>
+		<bean id="menuServiceProxy" class="com.web.service.proxy.MenuServiceProxy">
+			<property id="menuService" ref="menuService"/>
+			<property id="trans" ref="trans"/>
+		</bean>
+		<bean id="permissionsServiceProxy" class="com.web.service.proxy.PermissionsServiceProxy">
+			<property id="permissionsService" ref="permissionsService"/>
+			<property id="trans" ref="trans"/>
+		</bean>
+		<bean id="permissionsVOServiceProxy" class="com.web.service.proxy.PermissionsVOServiceProxy">
+			<property id="permissionsVOService" ref="permissionsVOService"/>
+			<property id="trans" ref="trans"/>
+		</bean>
+		<bean id="roleServiceProxy" class="com.web.service.proxy.RoleServiceProxy">
+			<property id="roleService" ref="roleService"/>
+			<property id="trans" ref="trans"/>
+		</bean>
+		<bean id="employeeServiceProxy" class="com.web.service.proxy.EmployeeServiceProxy">
+			<property id="employeeService" ref="employeeService"/>
+			<property id="trans" ref="trans"/>
+		</bean>
+		<bean id="deptServiceProxy" class="com.web.service.proxy.DeptServiceProxy">
+			<property id="deptService" ref="deptService"/>
+			<!-- id指的是本类中对象的名字，ref指向目标bean -->
+			<property id="trans" ref="trans"/>
+		</bean>
+		<bean id="holidayServiceProxy" class="com.web.service.proxy.HolidayServiceProxy">
+			<property id="holidayService" ref="holidayService"/>
+			<property id="trans" ref="trans"/>
+		</bean>
+		<bean id="reimbursementServiceProxy" class="com.web.service.proxy.ReimbursementServiceProxy">
+			<property id="reimbursementService" ref="reimbursementService"/>
+			<property id="trans" ref="trans"/>
+		</bean>
+	</proxy>
+	<action>
+		<bean id="userAction" class="com.web.action.UserAction">
+			<property id="userService" ref="userServiceProxy"/>
+			<property id="userVOService" ref="userVOServiceProxy"/>
+			<property id="employeeService" ref="employeeServiceProxy"/>
+		</bean>
+		<bean id="menuAction" class="com.web.action.MenuAction">
+			<property id="menuService" ref="menuServiceProxy"/>
+		</bean>
+		<bean id="permissionsAction" class="com.web.action.PermissionsAction">
+			<property id="permissionsService" ref="permissionsServiceProxy"/>
+			<property id="permissionsVOService" ref="permissionsVOServiceProxy"/>
+		</bean>
+		<bean id="roleAction" class="com.web.action.RoleAction">
+			<property id="roleService" ref="roleServiceProxy"/>
+		</bean>
+		<bean id="employeeAction" class="com.web.action.EmployeeAction">
+			<property id="employeeService" ref="employeeServiceProxy"/>
+		</bean>
+		<bean id="deptAction" class="com.web.action.DeptAction">
+			<property id="deptService" ref="deptServiceProxy"/>
+		</bean>
+		<bean id="holidayAction" class="com.web.action.HolidayAction">
+			<property id="holidayService" ref="holidayServiceProxy"/>
+		</bean>
+		<bean id="reimbursementAction" class="com.web.action.ReimbursementAction">
+			<property id="reimbursementService" ref="reimbursementServiceProxy"/>
+			<property id="employeeService" ref="employeeServiceProxy"/>
+			<property id="deptService" ref="deptServiceProxy"/>
+		</bean>
+	</action>
+</object>

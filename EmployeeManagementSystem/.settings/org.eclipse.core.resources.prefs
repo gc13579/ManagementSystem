@@ -1,0 +1,10 @@
+#Mon Dec 09 17:11:40 CST 2019
+eclipse.preferences.version=1
+encoding//src/com/web/mvc=gbk
+encoding//src/com/web/mvc/Action.java=gbk
+encoding//src/com/web/mvc/MVCConfig.java=gbk
+encoding//src/com/web/mvc/MVCConfigParser.java=gbk
+encoding//src/com/web/mvc/Package.java=gbk
+encoding//src/com/web/mvc/Result.java=gbk
+encoding//src/com/web/service/impl/UserServiceImpl.java=gbk
+encoding//src/com/web/servlet/DispatcherServlet.java=gbk

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mvc [
+	<!ELEMENT mvc (package*)>
+	<!ELEMENT package (action+)>
+	<!ATTLIST package name CDATA #REQUIRED>
+	<!ATTLIST package namespace CDATA #REQUIRED>
+	<!ELEMENT action (result+)>
+	<!ATTLIST action id CDATA #REQUIRED>
+	<!ATTLIST action name CDATA #REQUIRED>
+	<!ATTLIST action method CDATA #REQUIRED>
+	<!ELEMENT result (#PCDATA)>
+	<!ATTLIST result name CDATA #REQUIRED>
+	<!ATTLIST result type CDATA #REQUIRED>
+]>
+<!-- http://127.0.0.1:8080/项目名/  命名空间  /  操作名 .do -->
+<mvc>
+	<package name="user" namespace="user">
+		<action id="userAction" name="login" method="login">
+			<result type="redirect" name="success">/njwb/main.jsp</result>
+			<result type="forward" name="fail">/njwb/login.jsp</result>
+		</action>
+		<action id="userAction" name="getUser" method="getUser">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="userAction" name="remove" method="remove">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="userAction" name="getUserVoById" method="getUserVoById">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="userAction" name="edit" method="edit">
+			<result type="redirect" name="success">/njwb/user/user.jsp</result>
+			<result type="forward" name="fail">/njwb/user/userEdit.jsp</result>
+		</action>
+		<action id="userAction" name="add" method="add">
+			<result type="redirect" name="success">/njwb/user/user.jsp</result>
+			<result type="forward" name="fail">/njwb/user/userAdd.jsp</result>
+		</action>
+		<action id="userAction" name="getAllSubMenu" method="getAllSubMenu">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="userAction" name="changePassword" method="changePassword">
+			<result type="redirect" name="success">/njwb/login.jsp</result>
+			<result type="forward" name="fail">/njwb/passwordReset.jsp</result>
+		</action>
+		<action id="userAction" name="quit" method="quit">
+			<result type="redirect" name="success">/njwb/login.jsp</result>
+		</action>
+	</package>
+	<package name="permissions" namespace="permissions">
+		<action id="permissionsAction" name="getPermissionsByRidAndMidAndPageNo" method="getPermissionsByRidAndMidAndPageNo">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="permissionsAction" name="getPermissionsByRidAndMid" method="getPermissionsByRidAndMid">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="permissionsAction" name="remove" method="remove">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="permissionsAction" name="addPermissions" method="addPermissions">
+			<result type="redirect" name="success">/njwb/permissions/permissions.jsp</result>
+			<result type="forward" name="fail">/njwb/permissions/permissionsAdd.jsp</result>
+		</action>
+		<action id="permissionsAction" name="edit" method="edit">
+			<result type="redirect" name="success">/njwb/permissions/permissions.jsp</result>
+			<result type="forward" name="fail">/njwb/permissions/permissionsEdit.jsp</result>
+			
+		</action>
+	</package>
+	<package name="menu" namespace="menu">
+		<action id="menuAction" name="getMenu" method="getMenu">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="menuAction" name="getAllMenuNames" method="getAllMenuNames">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="menuAction" name="getOneMenuById" method="getOneMenuById">
+			<result type="ajax" name="success"></result>
+		</action>
+		
+	</package>
+	<package name="role" namespace="role">
+		<action id="roleAction" name="getRole" method="getRole">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="roleAction" name="addRole" method="addRole">
+			<result type="redirect" name="success">/njwb/role/role.jsp</result>
+			<result type="forward" name="fail">/njwb/role/roleAdd.jsp</result>
+		</action>
+		<action id="roleAction" name="remove" method="remove">
+			<result type="ajax" name="success"></result>
+			<result type="ajax" name="fail"></result>
+		</action>
+		<action id="roleAction" name="edit" method="edit">
+			<result type="redirect" name="success">/njwb/role/role.jsp</result>
+		</action>
+		<action id="roleAction" name="getRoleById" method="getRoleById">
+			<result type="ajax" name="success"></result>
+		</action>
+<!--		<action id="roleAction" name="getRolesExpectedId" method="getRolesExpectedId">-->
+<!--			<result type="ajax" name="success"></result>-->
+<!--		</action>-->
+	</package>
+	<package name="employee" namespace="employee">
+		<action id="employeeAction" name="getEmployeeNoByName" method="getEmployeeNoByName">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="employeeAction" name="getEmployeeByDept" method="getEmployeeByDept">
+			<result type="ajax" name="success"></result>
+			</action>
+		<action id="employeeAction" name="getEmployee" method="getEmployee">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="employeeAction" name="addEmployee" method="addEmployee">
+			<result type="redirect" name="success">/njwb/employee/employee.jsp</result>
+		</action>
+		<action id="employeeAction" name="remove" method="remove">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="employeeAction" name="getemployeeById" method="getemployeeById">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="employeeAction" name="change" method="change">
+			<result type="redirect" name="success">/njwb/employee/employee.jsp</result>
+			<result type="forward" name="fail">/njwb/employee/employEdit.jsp</result>
+		</action>
+	</package>
+	
+	
+	
+	<package name="dept" namespace="dept">
+		<action id="deptAction" name="getDept" method="getDept">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="deptAction" name="deleteDept" method="deleteDept">
+			<result type="ajax" name="success"></result>
+			<result type="ajax" name="fail"></result>
+		</action>
+		<action id="deptAction" name="addDept" method="addDept">
+			<result type="redirect" name="success">/njwb/dept/dept.jsp</result>
+			<result type="forward" name="fail">/njwb/dept/deptAdd.jsp</result>
+		</action>
+		<action id="deptAction" name="getDeptByNo" method="getDeptByNo">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="deptAction" name="remove" method="remove">
+			<result type="ajax" name="success"></result>
+			<result type="ajax" name="fail"></result>
+		</action>
+		<action id="deptAction" name="change" method="change">
+			<result type="redirect" name="success">/njwb/dept/dept.jsp</result>
+			<result type="forward" name="fail">/njwb/dept/deptEdit.jsp</result>
+		</action>
+		
+		
+		</package>
+	
+		<package name="holiday" namespace="holiday">
+		<action id="holidayAction" name="getHoliday" method="getHoliday">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="holidayAction" name="delHoliday" method="delHoliday">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="holidayAction" name="selfHoliday" method="selfHoliday">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="holidayAction" name="addHoliday" method="addHoliday">
+			<result type="ajax" name="success"></result>
+		</action>
+		<action id="holidayAction" name="change" method="change">
+			<result type="ajax" name="success">/</result>
+		</action>
+	</package>
+	
+	
+	<package name="reimbursement" namespace="reimbursement">
+		<action id="reimbursementAction" name="getReimbursement" method="getReimbursement">
+		  <result type="ajax" name="success"></result>
+		</action>
+		<action id="reimbursementAction" name="addReimbursement" method="addReimbursement">
+		  <result type="ajax" name="success"></result>
+		</action>
+		<action id="reimbursementAction" name="selfReimbursement" method="selfReimbursement">
+<!--				<result type="ajax" name="success"></result>-->
+				<result type="forward" name="success">/njwb/reimbursement/reimbursementDetail1.jsp</result>
+		</action>
+		<action id="reimbursementAction" name="delReimbursement" method="delReimbursement">
+				<result type="ajax" name="success"></result>
+		</action>
+				<action id="reimbursementAction" name="change" method="change">
+			    <result type="ajax" name="success">/</result>
+		</action>
+	</package>
+</mvc>

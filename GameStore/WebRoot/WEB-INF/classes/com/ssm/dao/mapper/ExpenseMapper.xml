@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.ExpenseDao">
+	<sql id="sqlPiece">
+			id,u_id,g_name,money,way,buy_time
+	</sql>
+	
+	<insert id="insertExpense" parameterType="java.util.Map">
+		insert into
+			t_expense
+		values
+			(null,#{userId},#{gameName},#{money},#{way},#{buyTime})
+	</insert>
+	
+	
+	<select id="countExpenses" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select
+			count(id)
+		from
+			t_expense
+		where
+			u_id = #{id}
+	</select>
+<!--  
+	<select id="selectAllExpensesByPager" parameterType="java.util.Map" resultMap="expenseMapper">
+		select
+			<include refid="sqlPiece"/>
+		from(
+			select 
+		  		rownum r,<include refid="sqlPiece"/>
+		  	from
+		   		 t_expense t
+		    <where>
+			  	u_id = ${id}
+			  	and rownum &lt; #{max}
+		 	</where>
+		 	order by
+		 		id
+		 	asc )
+		 where
+		 	r &gt; #{min}
+	</select>
+-->	
+	<select id="selectAllExpensesByPager" parameterType="java.util.Map" resultMap="expenseMapper">
+		select
+			<include refid="sqlPiece"/>
+		from(
+			select 
+		  		rownum r,<include refid="sqlPiece"/>
+		  	from(
+		   		select
+		   			<include refid="sqlPiece"></include> 
+		   		from
+		   			t_expense
+		   		where
+				  	u_id = #{id}
+		   		order by
+		   			id
+		   		asc)t
+	   		 )
+		 where
+		 	r &lt; #{max}
+		 and
+		 	r &gt; #{min}
+	</select>
+	 
+	<select id="selectExpenseByUserIdAndGameName" parameterType="java.util.Map" resultMap="expenseMapper">
+		select
+			<include refid="sqlPiece"></include>
+		from
+			t_expense
+		where
+			u_id = #{userId}
+		and
+			g_name = #{gameName}
+	</select>
+	
+	
+	
+     <resultMap type="com.ssm.pojo.Expense" id="expenseMapper">
+	     <result column="id" property="id"/>
+	     <result column="u_id" property="userId"/>
+	     <result column="g_name" property="gameName"/>
+	     <result column="money" property="money"/>
+	     <result column="way" property="way"/>
+	     <result column="buy_time" property="buyTime"/>
+     </resultMap>
+</mapper>
+

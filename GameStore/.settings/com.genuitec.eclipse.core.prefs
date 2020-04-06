@@ -1,0 +1,4 @@
+#Wed Feb 05 15:05:24 CST 2020
+eclipse.preferences.version=1
+validator.Checked=src/com/ssm/dao/mapper/ExpenseMapper.xml,WebRoot/js,WebRoot/user/register.jsp,WebRoot/WEB-INF/web.xml
+validator.Unchecked=

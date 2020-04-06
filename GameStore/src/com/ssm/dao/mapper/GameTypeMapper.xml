@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.GameTypeDao">
+	<sql id="sqlPiece">
+		t_game_type.id,t_game_type.name,t_game_type.status,t_game_type.picture,t_game_type.create_time,t_game_type.update_time
+	</sql>
+	<select id="selectAllGameTypes" parameterType="java.util.Map" resultMap="gameTypeMapper">
+	  select 
+	  	<include refid="sqlPiece"/>
+	  from
+	    t_game_type
+	  <where>
+	  	<if test="name != null and name != '' ">
+	  		and name like '%${name}%'
+	  	</if>
+	  	<if test="status != null and status != '' ">
+	  		and status=#{status}
+	  	</if>
+	  </where>
+	</select>
+    
+     <select id="selectAllGameTypesByGameCount" resultMap="gameTypeMapper">
+		select 
+			<include refid="sqlPiece"></include> 
+		from 
+			t_game_type
+		left outer join
+			t_game 
+		on
+			t_game_type.name= t_game.type
+		and
+      		t_game.status != '下线'
+		having
+      		t_game_type.status != '下线'
+		group by
+			 <include refid="sqlPiece"></include>
+		order by
+			count(t_game.id)
+		desc
+     </select>
+          
+     <update id="updateGameTypeStatus" parameterType="java.util.Map">
+     	update 
+     		t_game_type
+     	set
+     		name=#{name},status=#{typeStatus},update_time = #{updateTime}
+     	where 
+     		id = #{id}
+     </update>
+     
+     
+     <delete id="deleteGameType">
+     	delete from
+     		t_game_type
+     	where
+     		id
+     	in
+     		<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+			  #{id}
+			</foreach> 
+     </delete>
+     
+     
+     <insert id="insertGameType" parameterType="java.util.Map">
+     	insert into
+     		t_game_type
+     	values
+     		(null,#{name},#{typeStatus},#{filePath},#{createTime},#{updateTime})
+     </insert>
+     
+     
+     <select id="selectGameTypeByName" parameterType="string" resultMap="gameTypeMapper">
+     	select
+     		<include refid="sqlPiece"></include>
+     	from
+     		t_game_type
+     	where
+     		name = #{name}
+     </select>
+     
+      <!--  
+      
+     <select id="selectPicturePathById" resultType="string">
+     	select
+     		 picture
+        from 
+        	t_game_type
+        where
+     		id
+     	in
+     		<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+			  #{id}
+			</foreach> 
+     </select>
+      -->
+     <select id="selectGameByIds" resultMap="gameTypeMapper">
+     	select
+     		 <include refid="sqlPiece"></include>
+        from 
+        	t_game_type
+        where
+     		id
+     	in
+     		<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+			  #{id}
+			</foreach> 
+     </select>
+     
+     <select id="selectOnlineGameTypes" resultMap="gameTypeMapper">
+     	select
+     		<include refid="sqlPiece"></include>
+     	from
+     		t_game_type
+     	where
+     		status != '下线'
+     </select>
+     
+     <select id="selectGameTypeById" parameterType="java.lang.Integer" resultMap="gameTypeMapper">
+     	select
+     		<include refid="sqlPiece"></include>
+     	from
+     		t_game_type
+     	where
+     		id = #{id}
+     </select>
+     
+     
+     <resultMap type="com.ssm.pojo.GameType" id="gameTypeMapper">
+     <result column="id" property="id"/>
+     <result column="name" property="name"/>
+     <result column="status" property="status"/>
+     <result column="picture" property="picture"/>
+     <result column="create_time" property="createTime"/>
+     <result column="update_time" property="updateTime"/>
+     
+     
+     </resultMap>
+</mapper>

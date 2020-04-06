@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.CardDao">
+	<sql id="sqlPiece">
+			id,account,password,province,create_time,start_time,end_time,status,money
+	</sql>
+	
+	<insert id="insertCard" parameterType="com.ssm.pojo.Card">
+		insert into
+			t_card
+			(<include refid="sqlPiece"></include>)
+		values
+			(null,#{account},#{password},#{province},#{createTime},#{startTime},#{endTime},#{status},#{money})
+	</insert>
+	
+	<select id="countCards" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select
+			count(id)
+		from
+			t_card
+		<where>
+			<if test="account != null and account != '' ">
+		  		and account like '%${account}%'
+		  	</if>
+		  	<if test="startTime != null and startTime != '' ">
+		  		and to_char(start_time,'yyyy-mm-dd')=#{startTime}
+		  	</if>
+		  	<if test="endTime != null and endTime != '' ">
+		  		and to_char(end_time,'yyyy-mm-dd')=#{endTime}
+		  	</if>
+		  	<if test="province != null and province != '' ">
+		  		and province like '%${province}%'
+		  	</if>
+		</where>
+	</select>
+
+	<select id="selectAllCardsByPager" parameterType="java.util.Map" resultMap="cardMapper">
+		select
+			<include refid="sqlPiece"/>
+		from(
+			select 
+		  		rownum r,<include refid="sqlPiece"/>
+		  	from(
+		   		select
+		   			<include refid="sqlPiece"></include> 
+		   		from
+		   			t_card
+		   		<where>
+				  	<if test="account != null and account != '' ">
+		  				and account like '%${account}%'
+				  	</if>
+				  	<if test="startTime != null and startTime != '' ">
+			  			and to_char(start_time,'yyyy-mm-dd')=#{startTime}
+				  	</if>
+				  	<if test="endTime != null and endTime != '' ">
+				  		and to_char(end_time,'yyyy-mm-dd')=#{endTime}
+				  	</if>
+				  	<if test="province != null and province != '' ">
+				  		and province like '%${province}%'
+				  	</if>
+		 	 	</where>
+		   		order by
+		   			id
+		   		asc)t
+	   		 )
+		 where
+		 	r &lt; #{max}
+		 and
+		 	r &gt; #{min}
+	</select>	
+	<!-- 
+	<select id="selectAllCardsByPager" parameterType="java.util.Map" resultMap="cardMapper">
+		select
+			rownum r,<include refid="sqlPiece"/>
+		from(
+			select 
+		  		rownum r,<include refid="sqlPiece"/>
+		  	from
+		   		 t_card t
+		    <where>
+			  	<if test="account != null and account != '' ">
+		  			and account like '%${account}%'
+			  	</if>
+			  	<if test="startTime != null and startTime != '' ">
+		  			and to_char(start_time,'yyyy-mm-dd')=#{startTime}
+			  	</if>
+			  	<if test="endTime != null and endTime != '' ">
+			  		and to_char(end_time,'yyyy-mm-dd')=#{endTime}
+			  	</if>
+			  	<if test="province != null and province != '' ">
+			  		and province like '%${province}%'
+			  	</if>
+			  	and rownum &lt; #{max}
+		 	 </where>
+		 	 order by
+		 	 	id
+		 	 asc)
+		 where
+		 	r &gt; #{min}
+	 	 order by
+	 	 	id 
+	 	 asc
+	</select>
+	 -->
+	<update id="updateCardStatusById" parameterType="java.util.Map">
+		update 
+			t_card
+		set
+			status = #{status}
+		where
+			id = #{id}
+	</update>
+	
+	<select id="selectCardByAccount" parameterType="string" resultMap="cardMapper">
+		select
+			<include refid="sqlPiece"></include>
+		from
+			t_card
+		where
+			account = #{account}
+	</select>
+	
+	
+	
+     <resultMap type="com.ssm.pojo.Card" id="cardMapper">
+     <result column="id" property="id"/>
+     <result column="account" property="account"/>
+     <result column="password" property="password"/>
+     <result column="province" property="province"/>
+     <result column="create_time" property="createTime"/>
+     <result column="start_time" property="startTime"/>
+     <result column="end_time" property="endTime"/>
+     <result column="status" property="status"/>
+     <result column="money" property="money"/>
+     </resultMap>
+</mapper>
+

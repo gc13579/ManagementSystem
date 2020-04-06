@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.ExchangeDao">
+	<sql id="sqlPiece">
+		id,charge,create_time,update_time,status，provinceId
+	</sql>
+	
+	<insert id="insertExchange">
+		insert into
+			t_exchange
+		values
+			(null,#{charge},#{createTime},#{updateTime},#{status},#{provinceId})
+	</insert>
+	
+   <select id="countExchanges" parameterType="java.util.Map" resultType="java.lang.Integer">
+   		select
+   			count(id)
+   		from
+   			t_exchange
+   		<where>
+   			<if test="provinceId != null and provinceId != '' ">
+		  		and provinceId like '%${provinceId}%'
+		  	</if>
+   		</where>
+   </select>
+	<!--  
+	<select id="selectAllExchangesByPager" parameterType="java.util.Map" resultMap="exchangeMapper">
+		select
+			<include refid="sqlPiece"/>
+		from(
+			select 
+		  		rownum r,<include refid="sqlPiece"/>
+		  	from
+		   		 t_exchange t
+		    <where>
+			  	<if test="province != null and province != '' ">
+			  		and province like '%${province}%'
+			  	</if>
+			  	and rownum &lt; #{max}
+		 	 </where>
+		 	 order by id asc
+		 	 )
+		 where
+		 	r &gt; #{min}
+	</select>
+	-->
+	
+	
+	<select id="selectAllExchangesByPager" parameterType="java.util.Map" resultMap="exchangeMapper">
+		select
+			<include refid="sqlPiece"/>
+		from(
+			select 
+		  		rownum r,<include refid="sqlPiece"/>
+		  	from(
+		   		select
+		   			<include refid="sqlPiece"></include> 
+		   		from
+		   			t_exchange
+		   		<where>
+				  	<if test="provinceId != null and provinceId != '' ">
+				  		and provinceId = #{provinceId}
+				  	</if>
+		 	 	</where>
+		   		order by
+		   			id
+		   		asc)t
+	   		 )
+		 where
+		 	r &lt; #{max}
+		 and
+		 	r &gt; #{min}
+	</select>
+	
+	<select id="selectAllExchange" resultMap="exchangeMapper">
+		select
+			<include refid="sqlPiece"></include>
+		from
+			t_exchange
+	</select>
+	
+	
+	
+	<select id="selectExchangeById" parameterType="java.lang.Integer" resultMap="exchangeMapper">
+		select
+			<include refid="sqlPiece"></include>
+		from
+			t_exchange
+		where
+			provinceId = #{id}
+	</select>
+	
+	<update id="updateExchange" parameterType="java.util.Map">
+		update
+			t_exchange
+		set
+			charge = #{charge},status = #{status},update_time = #{updateTime}
+		where
+			id = #{id}
+	</update>
+	
+	
+	<delete id="deleteExchangeByIds">
+		delete from
+     		t_exchange
+     	where
+     		id
+     	in
+     		<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+			  #{id}
+			</foreach> 
+	</delete>
+	
+     <resultMap type="com.ssm.pojo.Exchange" id="exchangeMapper">
+     <result column="id" property="id"/>
+     <result column="charge" property="charge"/>
+     <result column="create_time" property="createTime"/>
+     <result column="update_time" property="updateTime"/>
+     <result column="status" property="status"/>
+     <result column="provinceId" property="provinceId"/>
+     </resultMap>
+</mapper>
+

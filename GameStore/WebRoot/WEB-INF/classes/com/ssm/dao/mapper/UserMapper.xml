@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.dao.UserDao">
+	<sql id="sqlPiece">
+			id,account,password,birthday,iphone,tariffe,currency,status,sex,create_time,province
+	</sql>
+	<select id="selectUserByAccountAndPwd" parameterType="java.util.Map" resultMap="userMapper">
+	  select 
+	  	<include refid="sqlPiece"/>
+	  from
+	    t_user
+	  where
+	    account=#{account} and password = #{password}  
+	</select>
+	
+	
+	<insert id="insertUser" parameterType="com.ssm.pojo.User">
+		insert into
+			t_user
+			(<include refid="sqlPiece"></include>)
+		values
+			(null,#{account},#{password},#{birthday},#{iphone},1000
+			,0,'正常',#{sex},sysdate,#{province})
+	</insert>
+	
+	
+	<select id="selectUserByAccount" parameterType="string" resultMap="userMapper">
+		select 
+	  		<include refid="sqlPiece"/>
+	  	from
+	   		 t_user
+	   	where
+	   		account=#{account}
+	</select>
+	
+	
+	<select id="selectAllUsersByPager" parameterType="java.util.Map" resultMap="userMapper">
+		select
+			<include refid="sqlPiece"/>
+		from(
+			select 
+		  		rownum r,<include refid="sqlPiece"/>
+		  	from
+		   		 t_user t
+		    <where>
+			  	<if test="account != null and account != '' ">
+			  		and account like '%${account}%'
+			  	</if>
+			  	<if test="iphone != null and iphone != '' ">
+			  		and iphone like '%${iphone}%'
+			  	</if>
+			  	and rownum &lt; #{max}
+		 	 </where>
+		 	 order by id asc
+		 	 )
+		 where
+		 	r &gt; #{min}
+	 	
+	</select>
+	
+	<update id="updateUsersStatusToForbid">
+		update
+			t_user
+		set
+			status='封禁'
+		where
+			id
+		in
+			<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+			  #{id}
+			</foreach> 
+	</update>
+	
+	<update id="updateUsersStatusToNormal">
+		update
+			t_user
+		set
+			status='正常'
+		where
+			id
+		in
+			<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">
+			  #{id}
+			</foreach> 
+	</update>
+	
+	
+	<select id="countUser" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select
+			count(id)
+		from
+			t_user
+		<where>
+		  	<if test="account != null and account != '' ">
+		  		and account like '%${account}%'
+		  	</if>
+		  	<if test="iphone != null and iphone != '' ">
+		  		and iphone like '%${iphone}%'
+		  	</if>
+	 	</where>
+			
+	</select>
+	
+	<update id="updateUserCurrencyById" parameterType="java.util.Map">
+	 	update
+	 		t_user
+	 	set
+	 		currency = #{currency}
+	 	where
+	 		id = #{userId}
+	</update>
+	
+	<update id="updateUserTariffeById" parameterType="java.util.Map">
+	 	update
+	 		t_user
+	 	set
+	 		tariffe = #{tariffe}
+	 	where
+	 		id = #{userId}
+	</update>
+	
+	
+	<select id="selectUserById" parameterType="java.lang.Integer" resultMap="userMapper">
+		select
+			<include refid="sqlPiece"></include>
+		from
+			t_user
+		where
+			id = #{id}
+	</select>
+	
+	
+	<update id="updateUserPwd" parameterType="java.util.Map">
+		update
+			t_user
+		set
+			password = #{password}
+		where
+			id = #{id}
+	</update>
+	
+	
+     <resultMap type="com.ssm.pojo.User" id="userMapper">
+     <result column="id" property="id"/>
+     <result column="account" property="account"/>
+     <result column="password" property="password"/>
+     <result column="birthday" property="birthday"/>
+     <result column="iphone" property="iphone"/>
+     <result column="tariffe" property="tariffe"/>
+     <result column="currency" property="currency"/>
+     <result column="status" property="status"/>
+     <result column="sex" property="sex"/>
+     <result column="create_time" property="createTime"/>
+     
+     
+     </resultMap>
+</mapper>
